@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useEffect, useId, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -32,9 +33,8 @@ export function AnimatedGridPattern({
   const id = useId();
   const containerRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [squares, setSquares] = useState<Array<{id: number, pos: number[]}>>([]);
+  const [squares, setSquares] = useState<Array<{ id: number, pos: number[] }>>([]);
 
-  // Helper function to get a random position based on dimensions
   const getRandomPosition = useCallback(() => {
     return [
       Math.floor(Math.random() * (dimensions.width / width || 1)),
@@ -42,7 +42,6 @@ export function AnimatedGridPattern({
     ];
   }, [dimensions.width, dimensions.height, width, height]);
 
-  // Update a square's position
   const updateSquarePosition = useCallback((id: number) => {
     setSquares((currentSquares) =>
       currentSquares.map((sq) =>
@@ -56,10 +55,8 @@ export function AnimatedGridPattern({
     );
   }, [getRandomPosition]);
 
-  // Initialize or update squares when dimensions change
   useEffect(() => {
     if (dimensions.width && dimensions.height) {
-      // Only regenerate squares when dimensions actually change
       setSquares(Array.from({ length: numSquares }, (_, i) => ({
         id: i,
         pos: getRandomPosition(),
@@ -89,7 +86,6 @@ export function AnimatedGridPattern({
     };
   }, []);
 
-  // We don't need to extract repeatDelay from props since it's already destructured in the function parameters
 
   return (
     <svg
