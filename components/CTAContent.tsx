@@ -18,7 +18,7 @@ export const CTAContent = () => {
               Built to scale
             </h2>
             <p className="text-gray-500 md:text-xl max-w-md">
-              Whether you need millions of agents or clicks, we've got you covered.
+              Whether you need millions of agents or clicks, we&apos;ve got you covered.
             </p>
 
             <div className="space-y-3 mt-4">

@@ -1,6 +1,6 @@
 "use client"
 import createGlobe, { COBEOptions } from "cobe"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
 
 const GLOBE_CONFIG: COBEOptions = {
@@ -66,7 +66,7 @@ export function Globe({
   }
 
   const onRender = useCallback(
-    (state: Record<string, any>) => {
+    (state: Record<string, unknown>) => {
       // Auto-rotation when not interacting
       if (pointerInteracting.current === null) {
         phiRef.current += 0.005

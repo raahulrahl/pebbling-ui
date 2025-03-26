@@ -13,10 +13,10 @@ export const NewsletterEmailTemplate: React.FC<Readonly<NewsletterEmailTemplateP
     </h1>
     <p style={{ color: '#4b5563', fontSize: '16px', lineHeight: '24px' }}>
       Thank you for subscribing to our newsletter with <strong>{email}</strong>. 
-      You'll now receive updates about Pebbling AI and agent-to-agent communication.
+      You&apos;ll now receive updates about Pebbling AI and agent-to-agent communication.
     </p>
     <p style={{ color: '#4b5563', fontSize: '16px', lineHeight: '24px' }}>
-      We're excited to have you join our community!
+      We&apos;re excited to have you join our community!
     </p>
     <div style={{ marginTop: '32px', marginBottom: '32px' }}>
       <a 
@@ -34,7 +34,7 @@ export const NewsletterEmailTemplate: React.FC<Readonly<NewsletterEmailTemplateP
       </a>
     </div>
     <p style={{ color: '#6b7280', fontSize: '14px' }}>
-      If you didn't sign up for this newsletter, you can safely ignore this email.
+      If you didn&apos;t sign up for this newsletter, you can safely ignore this email.
     </p>
   </div>
 );

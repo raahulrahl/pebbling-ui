@@ -109,7 +109,7 @@ export const Timeline = () => {
               We ship fast
             </h2>
             <p className="max-w-[600px] text-gray-500 md:text-xl">
-              Check out our changelog to see what's new on Pebble.
+              Check out our changelog to see what&apos;s new on Pebble.
             </p>
           </motion.div>
 
