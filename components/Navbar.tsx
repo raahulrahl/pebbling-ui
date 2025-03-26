@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Image from "next/image"
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { RainbowButton } from './RainbowButton'
 
 // A custom component to fetch and display GitHub stars
 const GitHubStars = () => {
@@ -51,18 +52,18 @@ const Navbar = () => {
     <header className="border-b border-gray-200 py-4 relative">
       <div className="container mx-auto flex items-center justify-between px-4">
         <div className="flex items-center space-x-2">
-          <div className="h-8 w-8 bg-black rounded-md flex items-center justify-center">
+          <div className="h-8 w-8 flex items-center justify-center">
             <Image
-              src="/placeholder.svg?height=24&width=24"
-              alt="LlamaIndex Logo"
-              width={24}
-              height={24}
-              className="invert"
+              src="/Pebbling.jpg"
+              alt="Pebbling Logo"
+              width={32}
+              height={32}
+              className="rounded-md"
             />
           </div>
-          <span className="text-xl font-bold">Pebbling</span>
+          <span className="text-xl font-bold">Pebbling AI</span>
         </div>
-        
+
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <GitHubStars />
@@ -79,32 +80,32 @@ const Navbar = () => {
             BLOG
           </Link>
         </nav>
-        
+
         {/* Desktop Buttons */}
         <div className="hidden md:flex items-center space-x-4">
           <Button variant="outline">
             DOCS
           </Button>
-          <Button className="bg-black text-white hover:bg-gray-800">
+          <RainbowButton>
             Sign up
-          </Button>
+          </RainbowButton>
         </div>
-        
+
         {/* Mobile Hamburger Button */}
-        <button 
+        <button
           className="md:hidden p-2 rounded-md hover:bg-gray-100 transition-colors"
           onClick={toggleMenu}
           aria-label="Toggle menu"
         >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            width="24" 
-            height="24" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
             strokeLinejoin="round"
             className={`transition-transform duration-300 ${isMenuOpen ? 'rotate-90' : ''}`}
           >
@@ -123,9 +124,9 @@ const Navbar = () => {
           </svg>
         </button>
       </div>
-      
+
       {/* Mobile Menu Dropdown */}
-      <div 
+      <div
         className={`md:hidden absolute w-full bg-white z-50 border-b border-gray-200 shadow-lg transition-all duration-300 ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}
       >
         <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { MoveRight, PhoneCall } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { RainbowButton } from "./RainbowButton";
 
 function Hero() {
   const [titleNumber, setTitleNumber] = useState(0);
@@ -80,12 +81,13 @@ function Hero() {
                   animationIterationCount: 'infinite',
                 }}
               />
-              <Button
-                size="lg"
-                className="relative z-10 gap-4 w-full sm:w-auto bg-zinc-900 text-white hover:bg-gray-200 hover:text-zinc-900 hover:z-10 border-2 border-transparent hover:border-blue-500 transition-all duration-300"
+              <RainbowButton
+                className="relative z-10 h-12 w-full sm:w-auto"
               >
-                Jump on a call <PhoneCall className="w-4 h-4" />
-              </Button>
+                <span className="flex items-center gap-2">
+                  Jump on a call <PhoneCall className="w-4 h-4" />
+                </span>
+              </RainbowButton>
             </motion.div>
 
             <motion.div
@@ -100,13 +102,13 @@ function Hero() {
                   animationIterationCount: 'infinite',
                 }}
               />
-              <Button
-                size="lg"
-                className="relative z-10 gap-4 w-full sm:w-auto bg-zinc-900 text-white hover:bg-gray-200 hover:text-zinc-900 hover:z-10 border-2 border-transparent hover:border-blue-500 transition-all duration-300"
-
+              <RainbowButton
+                className="relative z-10 h-12 w-full sm:w-auto"
               >
-                Sign up here <MoveRight className="w-4 h-4" />
-              </Button>
+                <span className="flex items-center gap-2">
+                  Sign up here <MoveRight className="w-4 h-4" />
+                </span>
+              </RainbowButton>
             </motion.div>
           </div>
         </div>

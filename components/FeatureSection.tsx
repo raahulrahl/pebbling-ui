@@ -28,7 +28,7 @@ const FeatureSection = () => {
   // Hover variants are applied directly in the whileHover prop of motion.div
 
   return (
-    <section className="w-full py-8 md:py-16">
+    <section className="w-full py-8 md:py-16 bg-gray-50">
       <div className="container px-4 md:px-6 mx-auto max-w-5xl">
         <motion.div 
           className="flex flex-col items-center justify-center space-y-3 text-center mb-8"

@@ -5,6 +5,10 @@ import { AnimatedGridPattern } from '@/components/Background'
 import { cn } from '@/lib/utils'
 import FeatureSection from '@/components/FeatureSection'
 import { Footer } from '@/components/Footer'
+import CTAContent from '@/components/CTAContent'
+import OpenSourceSection from '@/components/OpenSourceSection'
+import Timeline from '@/components/Timeline'
+import NewsletterSection from '@/components/NewsletterSection'
 
 const Page = () => {
   return (
@@ -13,7 +17,6 @@ const Page = () => {
         <Navbar />
         <div className='relative'>
           <Hero />
-          {/* Animated background only visible on tablet and above */}
           <div className='hidden sm:block'>
             <AnimatedGridPattern
               numSquares={30}
@@ -27,6 +30,10 @@ const Page = () => {
           </div>
         </div>
         <FeatureSection />
+        <CTAContent />
+        <OpenSourceSection />
+        <Timeline />
+        <NewsletterSection />
         <Footer />
       </div>
     </>
