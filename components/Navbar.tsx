@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { RainbowButton } from './RainbowButton'
+import { UserButton, SignInButton, useUser } from '@clerk/nextjs'
 
 // A custom component to fetch and display GitHub stars
 const GitHubStars = () => {
@@ -43,6 +44,7 @@ const GitHubStars = () => {
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isSignedIn, user } = useUser();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -86,9 +88,15 @@ const Navbar = () => {
           <Button variant="outline">
             DOCS
           </Button>
-          <RainbowButton>
-            Sign up
-          </RainbowButton>
+          {isSignedIn ? (
+            <UserButton afterSignOutUrl="/" />
+          ) : (
+            <SignInButton mode="modal">
+              <RainbowButton>
+                Sign in
+              </RainbowButton>
+            </SignInButton>
+          )}
         </div>
 
         {/* Mobile Hamburger Button */}
@@ -148,9 +156,17 @@ const Navbar = () => {
           <Button variant="outline" className="w-full">
             DOCS
           </Button>
-          <Button className="bg-black text-white hover:bg-gray-800 w-full">
-            Sign up
-          </Button>
+          {isSignedIn ? (
+            <div className="flex justify-center">
+              <UserButton afterSignOutUrl="/" />
+            </div>
+          ) : (
+            <SignInButton mode="modal">
+              <Button className="bg-black text-white hover:bg-gray-800 w-full">
+                Sign in
+              </Button>
+            </SignInButton>
+          )}
         </div>
       </div>
     </header>

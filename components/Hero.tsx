@@ -4,9 +4,11 @@ import { motion } from "framer-motion";
 import { MoveRight, PhoneCall } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RainbowButton } from "./RainbowButton";
+import { SignUpButton, useUser } from "@clerk/nextjs";
 
 function Hero() {
   const [titleNumber, setTitleNumber] = useState(0);
+  const { isSignedIn, user } = useUser();
   const titles = useMemo(
     () => ["framework agnostic", "extensive agents", "ease of use", "secure protocol"],
     []
@@ -102,13 +104,25 @@ function Hero() {
                   animationIterationCount: 'infinite',
                 }}
               />
-              <RainbowButton
-                className="relative z-10 h-12 w-full sm:w-auto"
-              >
-                <span className="flex items-center gap-2">
-                  Sign up here <MoveRight className="w-4 h-4" />
-                </span>
-              </RainbowButton>
+              {isSignedIn ? (
+                <RainbowButton
+                  className="relative z-10 h-12 w-full sm:w-auto"
+                >
+                  <span className="flex items-center gap-2">
+                    Dashboard <MoveRight className="w-4 h-4" />
+                  </span>
+                </RainbowButton>
+              ) : (
+                <SignUpButton mode="modal">
+                  <RainbowButton
+                    className="relative z-10 h-12 w-full sm:w-auto"
+                  >
+                    <span className="flex items-center gap-2">
+                      Sign up here <MoveRight className="w-4 h-4" />
+                    </span>
+                  </RainbowButton>
+                </SignUpButton>
+              )}
             </motion.div>
           </div>
         </div>
