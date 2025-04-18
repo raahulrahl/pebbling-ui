@@ -72,7 +72,7 @@ export const Timeline = () => {
   };
 
   return (
-    <section className="w-full py-12 md:py-24 overflow-hidden">
+    <section className="w-full py-12 md:py-24 overflow-hidden bg-background text-foreground">
       <div className="container px-4 md:px-6 mx-auto max-w-5xl">
         <motion.div
           ref={ref}
@@ -81,7 +81,7 @@ export const Timeline = () => {
           variants={containerVariants}
           className="flex flex-col space-y-8"
         >
-          <div className="flex items-center space-x-2 text-orange-500">
+          <div className="flex items-center space-x-2 text-purple-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -108,7 +108,7 @@ export const Timeline = () => {
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
               We ship fast
             </h2>
-            <p className="max-w-[600px] text-gray-500 md:text-xl">
+            <p className="max-w-[600px] text-muted-foreground md:text-xl">
               Check out our changelog to see what&apos;s new on Pebble.
             </p>
           </motion.div>
@@ -125,7 +125,7 @@ export const Timeline = () => {
               initial={{ scaleY: 0 }}
               animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
               transition={{ duration: 0.5 }}
-              className="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-gray-200 origin-top"
+              className="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-border origin-top"
             ></motion.div>
 
             {/* Timeline items */}
@@ -149,7 +149,7 @@ export const Timeline = () => {
                       stiffness: 300,
                       delay: index * 0.2
                     }}
-                    className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-gray-200 rounded-full z-10"
+                    className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-card border-2 border-border rounded-full z-10"
                   ></motion.div>
 
                   <div className="grid grid-cols-2 gap-8 items-center">
@@ -174,7 +174,7 @@ export const Timeline = () => {
                       className={`pr-12 ${index % 2 === 1 ? 'col-start-2 text-left' : 'col-start-1 text-right'}`}
                     >
                       <h3 className="font-medium text-lg">{item.title}</h3>
-                      <p className="text-sm text-gray-500 mt-1">{item.date}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{item.date}</p>
                     </motion.div>
 
                     {/* Right side - icon */}
@@ -200,8 +200,8 @@ export const Timeline = () => {
                       }}
                       className={`${index % 2 === 0 ? 'col-start-2 pl-12' : 'col-start-1 pr-12 flex justify-end'}`}
                     >
-                      <div className="flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-full shadow-sm">
-                        <CalendarIcon className="h-5 w-5 text-gray-400" />
+                      <div className="flex items-center justify-center w-10 h-10 bg-card border border-border rounded-full shadow-sm">
+                        <CalendarIcon className="h-5 w-5 text-muted-foreground" />
                       </div>
                     </motion.div>
                   </div>

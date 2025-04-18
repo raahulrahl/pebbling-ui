@@ -3,8 +3,6 @@
 import React, { useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import { Hero } from '@/components/Hero'
-import { AnimatedGridPattern } from '@/components/Background'
-import { cn } from '@/lib/utils'
 import FeatureSection from '@/components/FeatureSection'
 import { Footer } from '@/components/Footer'
 import CTAContent from '@/components/CTAContent'
@@ -14,6 +12,7 @@ import NewsletterSection from '@/components/NewsletterSection'
 import AnimatedElement from '@/components/AnimatedElement'
 import BackToTop from '@/components/BackToTop'
 import { motion } from 'framer-motion'
+import { StickyNewsletter } from '@/components/StickyNewsletter'
 
 const Page = () => {
   // Add smooth scrolling behavior for anchor links
@@ -43,55 +42,49 @@ const Page = () => {
   return (
     <>
       <BackToTop />
-      <div className='mx-auto flex w-full max-w-[95%] flex-1 flex-col border-x border-gray-200'>
+      <div className='mx-auto flex w-full flex-1 flex-col pt-16 md:pt-20'>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className="w-full fixed top-0 left-0 right-0 z-50"
         >
           <Navbar />
         </motion.div>
         
-        <div className='relative'>
-          <AnimatedElement variant="fadeIn" duration={0.8}>
-            <Hero />
-          </AnimatedElement>
-          <div className='hidden sm:block'>
-            <AnimatedGridPattern
-              numSquares={30}
-              maxOpacity={0.2}
-              duration={3}
-              className={cn(
-                "[mask-image:radial-gradient(500px_circle_at_center,white,transparent)]",
-                "absolute inset-x-0 inset-y-[-30%] h-[200%] skew-y-12 bg-pink-100/50"
-              )}
-            />
+        <div className="mx-auto w-full max-w-[98%] sm:max-w-[95%] border-x border-border">
+          <div className='relative w-full'>
+            <AnimatedElement variant="fadeIn" duration={0.8}>
+              <Hero />
+            </AnimatedElement>
           </div>
+          
+          <AnimatedElement variant="slideUp" delay={0.2} threshold={0.2}>
+            <FeatureSection />
+          </AnimatedElement>
+          
+          <AnimatedElement variant="scale" delay={0.1} threshold={0.2}>
+            <CTAContent />
+          </AnimatedElement>
+          
+          <AnimatedElement variant="slideRight" delay={0.1} threshold={0.2}>
+            <OpenSourceSection />
+          </AnimatedElement>
+          
+          <AnimatedElement variant="slideLeft" delay={0.1} threshold={0.2}>
+            <Timeline />
+          </AnimatedElement>
+          
+          <AnimatedElement variant="slideUp" delay={0.1} threshold={0.2}>
+            <NewsletterSection />
+          </AnimatedElement>
+          
+          <AnimatedElement variant="fadeIn" delay={0.2} threshold={0.1}>
+            <Footer />
+          </AnimatedElement>
         </div>
         
-        <AnimatedElement variant="slideUp" delay={0.2} threshold={0.2}>
-          <FeatureSection />
-        </AnimatedElement>
-        
-        <AnimatedElement variant="scale" delay={0.1} threshold={0.2}>
-          <CTAContent />
-        </AnimatedElement>
-        
-        <AnimatedElement variant="slideRight" delay={0.1} threshold={0.2}>
-          <OpenSourceSection />
-        </AnimatedElement>
-        
-        <AnimatedElement variant="slideLeft" delay={0.1} threshold={0.2}>
-          <Timeline />
-        </AnimatedElement>
-        
-        <AnimatedElement variant="slideUp" delay={0.1} threshold={0.2}>
-          <NewsletterSection />
-        </AnimatedElement>
-        
-        <AnimatedElement variant="fadeIn" delay={0.2} threshold={0.1}>
-          <Footer />
-        </AnimatedElement>
+        <StickyNewsletter />
       </div>
     </>
   )

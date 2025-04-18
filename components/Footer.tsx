@@ -10,7 +10,7 @@ export const Footer = () => {
 
   return (
     <motion.footer 
-      className="bg-muted/40 py-8 sm:py-10 md:py-12 border-t border-gray-200"
+      className="bg-background py-8 sm:py-10 md:py-12 border-t border-border"
       initial="hidden"
       animate="visible"
       variants={fadeInUp}
@@ -103,7 +103,7 @@ export const Footer = () => {
           </motion.div>
         </div>
         <motion.div
-          className="mt-8 sm:mt-10 md:mt-12 pt-6 sm:pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-4"
+          className="mt-8 sm:mt-10 md:mt-12 pt-6 sm:pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4"
           variants={fadeInUp}
           transition={{ delay: 0.2 }}
         >

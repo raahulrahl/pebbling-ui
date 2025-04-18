@@ -6,7 +6,7 @@ import { RainbowButton } from "./RainbowButton";
 
 export const OpenSourceSection = () => {
   return (
-    <section className="w-full py-12 md:py-24 bg-gray-50 dark:bg-gray-900">
+    <section className="w-full py-12 md:py-24 bg-background">
       <div className="container px-4 md:px-6 mx-auto max-w-5xl">
         <motion.div 
           className="flex flex-col items-center justify-center space-y-4 text-center"
@@ -14,10 +14,10 @@ export const OpenSourceSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-foreground">
             Proudly open-source
           </h2>
-          <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
+          <p className="max-w-[600px] text-muted-foreground md:text-xl">
             Our source code is available on GitHub - feel free to read,
             review, or contribute to it however you want!
           </p>
@@ -34,7 +34,7 @@ export const OpenSourceSection = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 w-full">
             <motion.div 
-              className="flex flex-col items-center space-y-4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm"
+              className="flex flex-col items-center space-y-4 p-6 bg-card text-card-foreground rounded-lg shadow-sm"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
@@ -59,13 +59,13 @@ export const OpenSourceSection = () => {
                 ))}
               </div>
               <h3 className="text-2xl font-bold">6 Stars</h3>
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-muted-foreground">
                 And growing every day
               </p>
             </motion.div>
             
             <motion.div 
-              className="flex flex-col items-center space-y-4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm"
+              className="flex flex-col items-center space-y-4 p-6 bg-card text-card-foreground rounded-lg shadow-sm"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
@@ -74,7 +74,7 @@ export const OpenSourceSection = () => {
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((_, i) => (
                   <div 
                     key={i} 
-                    className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden"
+                    className="w-10 h-10 rounded-full bg-secondary overflow-hidden"
                   >
                     <svg 
                       xmlns="http://www.w3.org/2000/svg" 
@@ -86,7 +86,7 @@ export const OpenSourceSection = () => {
                       strokeWidth="2" 
                       strokeLinecap="round" 
                       strokeLinejoin="round" 
-                      className="text-gray-400"
+                      className="text-muted-foreground"
                     >
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                       <circle cx="12" cy="7" r="4" />
@@ -95,7 +95,7 @@ export const OpenSourceSection = () => {
                 ))}
               </div>
               <h3 className="text-2xl font-bold">5+ Contributors</h3>
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-muted-foreground">
                 Join our growing community
               </p>
             </motion.div>
