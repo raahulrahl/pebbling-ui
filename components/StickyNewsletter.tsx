@@ -35,7 +35,7 @@ export function StickyNewsletter() {
         setIsOpen(false);
       }, 3000);
       
-    } catch (_) {
+    } catch {
       setStatus("error");
       setMessage("An error occurred. Please try again.");
     }

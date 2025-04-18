@@ -5,8 +5,15 @@ import { NewsletterEmailTemplate } from '@/components/NewsletterEmailTemplate';
 
 // Initialize Resend with API key
 // In production, you would use process.env.RESEND_API_KEY
-const API_KEY = process.env.RESEND_API_KEY;
-const resend = new Resend(API_KEY); // Replace with your actual API key
+const API_KEY = process.env.RESEND_API_KEY || 'dummy_key_for_build';
+const resend = API_KEY === 'dummy_key_for_build' ? 
+  // Mock Resend instance for development/build
+  { 
+    emails: { 
+      send: async () => ({ id: 'mock_email_id', data: null }) 
+    } 
+  } as unknown as Resend : 
+  new Resend(API_KEY);
 
 export async function POST(req: NextRequest) {
   try {

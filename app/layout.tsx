@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AnimationProvider } from "@/context/AnimationContext";
-import { ClerkProvider } from "@clerk/nextjs";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -28,16 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider >
-    <html lang="en" className="scroll-smooth dark">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AnimationProvider>
-          {children}
-        </AnimationProvider>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} font-sans h-full`}
+    >
+      <body className={"dark bg-background text-foreground h-full"}>
+        <AnimationProvider>{children}</AnimationProvider>
       </body>
     </html>
-    </ClerkProvider>
   );
 }
