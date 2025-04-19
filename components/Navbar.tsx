@@ -4,7 +4,7 @@ import Image from "next/image"
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { RainbowButton } from './RainbowButton'
-import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs'
+import { SignInButton, UserButton, useUser } from '@clerk/nextjs'
 
 // A custom component to fetch and display GitHub stars
 const GitHubStars = () => {
@@ -43,7 +43,7 @@ const GitHubStars = () => {
 }
 
 const Navbar = () => {
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
