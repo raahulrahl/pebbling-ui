@@ -101,13 +101,21 @@ const Navbar = () => {
           >
             BLOG
           </Link>
+          <Link
+            href="#"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+          >
+            HIBISCUS
+          </Link>
         </nav>
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex items-center space-x-4">
-          <Button variant="outline">
-            DOCS
-          </Button>
+          <Link href="#">
+            <RainbowButton>
+              DOCS
+            </RainbowButton>
+          </Link>
           
           {isSignedIn ? (
             <UserButton 
@@ -184,9 +192,11 @@ const Navbar = () => {
           >
             BLOG
           </Link>
-          <Button variant="outline" className="w-full">
-            DOCS
-          </Button>
+          <Link href="#" className="w-full">
+            <RainbowButton className="w-full">
+              DOCS
+            </RainbowButton>
+          </Link>
           
           {isSignedIn ? (
             <Button 
