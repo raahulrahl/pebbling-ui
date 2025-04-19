@@ -5,8 +5,10 @@ import { MoveRight, PhoneCall } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RainbowButton } from "./RainbowButton";
 import { SimpleParticles } from "./SimpleParticles";
+import { useUser } from "@clerk/nextjs";
 
 function Hero() {
+  const { isSignedIn } = useUser();
   const [titleNumber, setTitleNumber] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const titles = useMemo(
@@ -106,26 +108,29 @@ function Hero() {
               </RainbowButton>
             </motion.div>
 
-            <motion.div
-              className="relative w-full sm:w-auto"
-              initial={{ scale: 1 }}
-              whileHover={{ scale: 1.05 }}
-            >
+            {!isSignedIn && (
               <motion.div
-                className="absolute inset-0 bg-cyan-500/50 rounded-lg blur-lg animate-pulse hidden sm:block"
-                style={{
-                  animationDuration: '2s',
-                  animationIterationCount: 'infinite',
-                }}
-              />
-              <RainbowButton
-                className="relative z-10 h-12 w-full"
+                className="relative w-full sm:w-auto"
+                initial={{ scale: 1 }}
+                whileHover={{ scale: 1.05 }}
               >
-                <span className="flex items-center gap-2 justify-center">
-                  Sign up here <MoveRight className="w-4 h-4" />
-                </span>
-              </RainbowButton>
-            </motion.div>
+                <motion.div
+                  className="absolute inset-0 bg-cyan-500/50 rounded-lg blur-lg animate-pulse hidden sm:block"
+                  style={{
+                    animationDuration: '2s',
+                    animationIterationCount: 'infinite',
+                  }}
+                />
+                <RainbowButton
+                  className="relative z-10 h-12 w-full"
+                  onClick={() => window.location.href = '/sign-up'}
+                >
+                  <span className="flex items-center gap-2 justify-center">
+                    Sign up here <MoveRight className="w-4 h-4" />
+                  </span>
+                </RainbowButton>
+              </motion.div>
+            )}
           </div>
         </div>
       </div>

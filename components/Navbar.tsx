@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { RainbowButton } from './RainbowButton'
+import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs'
 
 // A custom component to fetch and display GitHub stars
 const GitHubStars = () => {
@@ -42,6 +43,7 @@ const GitHubStars = () => {
 }
 
 const Navbar = () => {
+  const { isSignedIn, user } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -106,9 +108,26 @@ const Navbar = () => {
           <Button variant="outline">
             DOCS
           </Button>
-          <RainbowButton>
-            Sign in
-          </RainbowButton>
+          
+          {isSignedIn ? (
+            <UserButton 
+              afterSignOutUrl="/"
+              userProfileMode="navigation"
+              userProfileUrl="/user-profile"
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: "h-10 w-10",
+                  userButtonTrigger: "focus:shadow-none focus:ring-2 focus:ring-primary",
+                },
+              }}
+            />
+          ) : (
+            <SignInButton mode="modal">
+              <RainbowButton>
+                Sign in
+              </RainbowButton>
+            </SignInButton>
+          )}
         </div>
 
         {/* Mobile Hamburger Button */}
@@ -168,9 +187,21 @@ const Navbar = () => {
           <Button variant="outline" className="w-full">
             DOCS
           </Button>
-          <Button className="w-full">
-            Sign in
-          </Button>
+          
+          {isSignedIn ? (
+            <Button 
+              onClick={() => window.location.href = "/user-profile"}
+              className="w-full"
+            >
+              My Profile
+            </Button>
+          ) : (
+            <SignInButton mode="modal">
+              <Button className="w-full">
+                Sign in
+              </Button>
+            </SignInButton>
+          )}
         </div>
       </div>
     </header>

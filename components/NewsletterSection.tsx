@@ -59,8 +59,8 @@ export const NewsletterSection = () => {
             <span className="font-medium">Newsletter</span>
           </div>
           
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-foreground">
-            Stay in the loop
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+            <span className="bg-gradient-to-br from-pink-500 via-purple-500 to-purple-400 bg-clip-text text-transparent inline-block font-extrabold">Stay in the loop</span>
           </h2>
           <p className="max-w-[600px] text-muted-foreground md:text-xl">
             Subscribe to our newsletter to get the latest updates on Pebbling AI and agent-to-agent communication.

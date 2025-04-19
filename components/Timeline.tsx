@@ -81,39 +81,20 @@ export const Timeline = () => {
           variants={containerVariants}
           className="flex flex-col space-y-8"
         >
-          <div className="flex items-center space-x-2 text-purple-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-5 w-5"
-            >
-              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-              <polyline points="14 2 14 8 20 8" />
-            </svg>
-            <span className="font-medium">Changelog</span>
-          </div>
-
           <motion.div
             custom={0}
             variants={itemVariants}
-            className="flex flex-col space-y-4"
+            className="flex flex-col space-y-4 items-center text-center w-full"
           >
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-              We ship fast
+            <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl text-center my-2">
+              <span className="bg-gradient-to-r from-fuchsia-600 via-purple-500 to-pink-500 bg-clip-text text-transparent inline-block font-extrabold">We ship fast</span>
             </h2>
-            <p className="max-w-[600px] text-muted-foreground md:text-xl">
+            <p className="max-w-[600px] text-muted-foreground md:text-xl text-center">
               Check out our changelog to see what&apos;s new on Pebble.
             </p>
           </motion.div>
 
-          <motion.div custom={1} variants={itemVariants}>
+          <motion.div custom={1} variants={itemVariants} className="flex justify-center w-full">
             <RainbowButton onClick={() => window.open('#', '_blank')}>
               View full changelog
             </RainbowButton>

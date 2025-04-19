@@ -14,8 +14,8 @@ export const OpenSourceSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-foreground">
-            Proudly open-source
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+            <span className="bg-gradient-to-br from-pink-500 via-purple-500 to-purple-400 bg-clip-text text-transparent inline-block font-extrabold">Proudly open-source</span>
           </h2>
           <p className="max-w-[600px] text-muted-foreground md:text-xl">
             Our source code is available on GitHub - feel free to read,
