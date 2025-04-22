@@ -3,8 +3,7 @@ import "./globals.css";
 import "./satoshi.css";
 import { AnimationProvider } from "@/context/AnimationContext";
 import { ClerkProvider } from "@clerk/nextjs";
-
-
+import { PostHogProvider } from "@/components/PostHogProvider";
 
 export const metadata: Metadata = {
   title: "Pebbling AI",
@@ -21,14 +20,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className="font-sans h-full"
-    >
-      <body className={"dark bg-background text-foreground h-full"}>
-        <ClerkProvider>
-          <AnimationProvider>{children}</AnimationProvider>
-        </ClerkProvider>
+    <html lang="en" className="font-sans h-full">
+      <body className="dark bg-background text-foreground h-full">
+        <PostHogProvider>
+          <ClerkProvider>
+            <AnimationProvider>{children}</AnimationProvider>
+          </ClerkProvider>
+        </PostHogProvider>
       </body>
     </html>
   );
