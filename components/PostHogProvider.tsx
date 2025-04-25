@@ -6,22 +6,30 @@ import { Suspense, useEffect } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
-      api_host: "/ingest",
-      ui_host: "https://us.posthog.com",
-      capture_pageview: false, // We capture pageviews manually
-      capture_pageleave: true, // Enable pageleave capture
-      debug: process.env.NODE_ENV === "development"
-    })
-  }, [])
+  // Check if PostHog is configured and if we are in production
+  if (process.env.NEXT_PUBLIC_POSTHOG_KEY && process.env.NODE_ENV === 'production') {
+    useEffect(() => {
+      posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+        api_host: "/ingest",
+        ui_host: "https://us.posthog.com",
+        capture_pageview: false, // We capture pageviews manually
+        capture_pageleave: true, // Enable pageleave capture
+        loaded: (posthog) => {
+          if (process.env.NODE_ENV === "development") posthog.debug()
+        },
+      })
+    }, [])
 
-  return (
-    <PHProvider client={posthog}>
-      <SuspendedPostHogPageView />
-      {children}
-    </PHProvider>
-  )
+    return (
+      <PHProvider client={posthog}>
+        <SuspendedPostHogPageView />
+        {children}
+      </PHProvider>
+    )
+  }
+
+  // If not production or no key, just render children without PostHog
+  return <>{children}</>
 }
 
 function PostHogPageView() {

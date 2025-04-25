@@ -14,8 +14,8 @@ export const CTAContent = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              <span className="bg-gradient-to-br from-pink-500 via-purple-500 to-purple-400 bg-clip-text text-transparent inline-block font-extrabold">Built to scale</span>
+            <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl text-center ">
+              <span className="bg-gradient-to-r from-red-700 via-red-500 to-orange-400 dark:bg-gradient-to-br dark:from-pink-500 dark:via-purple-500 dark:to-purple-400 bg-clip-text text-transparent inline-block font-extrabold">Built to scale</span>
             </h2>
             <p className="text-muted-foreground md:text-xl max-w-md">
               Whether you need millions of agents or clicks, we&apos;ve got you covered.

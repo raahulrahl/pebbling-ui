@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { RainbowButton } from "./RainbowButton";
 import { SimpleParticles } from "./SimpleParticles";
 import { useUser } from "@clerk/nextjs";
+import { FloatingPaths } from "../components/ui/background-paths";
 
 function Hero() {
   const { isSignedIn } = useUser();
@@ -38,9 +39,12 @@ function Hero() {
         minHeight: '70vh',
       }}
     >
-      {/* Particles container strictly limited to the hero section */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden z-0">
         <SimpleParticles className="absolute top-0 left-0 right-0 bottom-0 h-full w-full" />
+        <div className="absolute inset-0 dark:hidden text-red-700">
+          <FloatingPaths position={1} />
+          <FloatingPaths position={-1} />
+        </div>
       </div>
       
       <div className="container mx-auto px-4 relative z-10 w-full">

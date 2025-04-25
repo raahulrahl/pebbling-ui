@@ -36,10 +36,10 @@ const FeatureSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-2xl font-bold tracking-tighter sm:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-            Powerful Features
+          <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl text-center my-2">
+            <span className="bg-gradient-to-r from-red-700 via-red-500 to-orange-400 dark:from-fuchsia-600 dark:via-purple-500 dark:to-pink-500 bg-clip-text text-transparent inline-block font-extrabold">Powerful Features</span>
           </h2>
-          <p className="max-w-[600px] text-sm text-muted-foreground md:text-base">
+          <p className="max-w-[600px] text-muted-foreground md:text-xl text-center">
             Our platform is built with cutting-edge technology to power your applications
           </p>
         </motion.div>
