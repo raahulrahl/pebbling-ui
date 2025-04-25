@@ -15,6 +15,12 @@ function Hero() {
   const [titleNumber, setTitleNumber] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Only show theme-dependent content after mounting to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const titles = useMemo(
     () => ["framework agnostic", "extensive agents", "ease of use", "secure protocol"],
@@ -45,11 +51,15 @@ function Hero() {
     >
       <div className="absolute inset-0 overflow-hidden z-0">
         <SimpleParticles className="absolute top-0 left-0 right-0 bottom-0 h-full w-full" />
-        <div className="absolute inset-0 dark:hidden text-red-700">
-          <FloatingPaths position={1} />
-          <FloatingPaths position={-1} />
-        </div>
-        {theme === 'dark' && <NewBackgroundAnimation className="absolute inset-0 w-full h-full" />}
+        {mounted && (
+          <>
+            <div className="absolute inset-0 dark:hidden text-red-700">
+              <FloatingPaths position={1} />
+              <FloatingPaths position={-1} />
+            </div>
+            {theme === 'dark' && <NewBackgroundAnimation className="absolute inset-0 w-full h-full" />}
+          </>
+        )}
       </div>
       
       <div className="container mx-auto px-4 relative z-10 w-full">
@@ -65,7 +75,7 @@ function Hero() {
           </div>
           <div className="flex gap-4 flex-col w-full">
             <h1 className="text-4xl sm:text-5xl md:text-7xl tracking-tighter text-center font-regular px-2">
-              <span className="bg-gradient-to-r from-purple-500 via-blue-400 to-cyan-600 bg-clip-text text-transparent font-bold">Agentify Yourself</span>
+              <span className="bg-gradient-to-r from-red-700 via-red-500 to-orange-400 bg-clip-text text-transparent font-bold">Agentify Yourself</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
                 &nbsp;
                 {titles.map((title, index) => (
@@ -101,13 +111,18 @@ function Hero() {
               initial={{ scale: 1 }}
               whileHover={{ scale: 1.05 }}
             >
-              <motion.div
-                className="absolute inset-0 bg-purple-500/50 rounded-lg blur-lg animate-pulse hidden sm:block"
-                style={{
-                  animationDuration: '2s',
-                  animationIterationCount: 'infinite',
-                }}
-              />
+              <div className="relative w-full h-full">
+                {/* Subtle animated gradient border */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-red-700 via-red-500 to-orange-400 dark:from-red-700 dark:via-red-600 dark:to-red-500 rounded-lg blur opacity-50 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+
+                {/* Animated pulse effect */}
+                <div
+                  className="absolute inset-0 bg-red-500/50 rounded-lg blur-lg animate-pulse hidden sm:block"
+                  style={{
+                    animationDuration: '3s', // Slower pulse
+                  }}
+                />
+              </div>
               <RainbowButton
                 className="relative z-10 h-12 w-full"
               >

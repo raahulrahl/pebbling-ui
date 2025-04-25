@@ -15,7 +15,7 @@ export const OpenSourceSection = () => {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl text-center my-2">
-            <span className="bg-gradient-to-r from-red-700 via-red-500 to-orange-400 dark:bg-gradient-to-br dark:from-pink-500 dark:via-purple-500 dark:to-purple-400 bg-clip-text text-transparent inline-block font-extrabold">Proudly open-source</span>
+            <span className="bg-gradient-to-r from-red-700 via-red-500 to-orange-400 dark:bg-gradient-to-br dark:from-red-700 dark:via-red-600 dark:to-red-500 bg-clip-text text-transparent inline-block font-extrabold">Proudly open-source</span>
           </h2>
           <p className="max-w-[600px] text-muted-foreground md:text-xl">
             Our source code is available on GitHub - feel free to read,

@@ -87,7 +87,7 @@ export const Timeline = () => {
             className="flex flex-col space-y-4 items-center text-center w-full"
           >
             <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl text-center my-2">
-              <span className="bg-gradient-to-r from-red-700 via-red-500 to-orange-400 dark:from-fuchsia-600 dark:via-purple-500 dark:to-pink-500 bg-clip-text text-transparent inline-block font-extrabold">We ship fast</span>
+              <span className="bg-gradient-to-r from-red-700 via-red-500 to-orange-400 dark:from-red-700 dark:via-red-600 dark:to-red-500 bg-clip-text text-transparent inline-block font-extrabold">We ship fast</span>
             </h2>
             <p className="max-w-[600px] text-muted-foreground md:text-xl text-center">
               Check out our changelog to see what&apos;s new on Pebble.

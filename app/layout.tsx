@@ -23,12 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="font-sans h-full" suppressHydrationWarning>
       <body className="bg-background text-foreground h-full">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider>
           <PostHogProvider>
             <ClerkProvider>
               <AnimationProvider>{children}</AnimationProvider>

@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useMemo, useState } from "react"
+import React, { useRef, useEffect, useMemo } from "react"
+import dynamic from 'next/dynamic'
 
 interface NetworkConfig {
   numAgents: number
@@ -24,25 +25,18 @@ const defaultConfig: NetworkConfig = {
   agentTypes: ["primary", "secondary", "tertiary"],
 }
 
-export default function NetworkBackgroundAnimation({
+function NetworkBackgroundAnimation({
   config: userConfig = {},
   className = "absolute inset-0 w-full h-full z-0",
 }: NetworkBackgroundAnimationProps) {
-  // Only render on client to avoid hydration error
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
-  // Stabilize config object with useMemo (static for empty userConfig)
-  const config = useMemo(() => {
-    if (!userConfig || Object.keys(userConfig).length === 0) {
-      return defaultConfig
-    }
-    return { ...defaultConfig, ...userConfig }
-  }, [JSON.stringify(userConfig)])
+  // Memoize config to prevent unnecessary re-renders
+  const config = useMemo(() => ({ ...defaultConfig, ...userConfig }), [JSON.stringify(userConfig)])
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   // Reverting type to 'any[]' as it was before the fixes
   const agentsRef = useRef<any[]>([]) 
   const animationFrameIdRef = useRef<number | null>(null)
-  const bgColorRef = useRef<string>('#0b0b14') // Default fallback
+  const bgColorRef = useRef<string>('#ffffff') // Default fallback
+  const responsiveConnectionDistanceRef = useRef<number>(config.connectionDistance); // Ref for responsive distance
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -67,49 +61,24 @@ export default function NetworkBackgroundAnimation({
     }
 
 
-    // Track agent density for responsive resizing
-    let density = 0;
-    // Set canvas dimensions and handle responsive agent adjustments
-    let dpr = 1;
+    // Set canvas dimensions
+    let dpr = 1; // Store dpr for use in animate
     const resizeCanvas = () => {
       dpr = window.devicePixelRatio || 1 // Update dpr on resize
       const rect = canvas.getBoundingClientRect()
-      const newWidth = Math.max(1, rect.width * dpr);
-      const newHeight = Math.max(1, rect.height * dpr);
+      canvas.width = rect.width * dpr
+      canvas.height = rect.height * dpr
+      // No ctx.scale needed here if drawing coords are scaled
 
-      if (canvas.width !== newWidth || canvas.height !== newHeight) {
-        canvas.width = newWidth;
-        canvas.height = newHeight;
-        console.log(`Canvas resized to: ${canvas.width}x${canvas.height}`);
-      } else {
-         console.log("Resize detected but dimensions haven't changed.")
-      }
-
-      // After initial setup, adjust agents count and clamp positions
-      if (density > 0) {
-        // Keep agents within new bounds
-        agentsRef.current.forEach((agent: any) => {
-          agent.x = Math.max(agent.radius, Math.min(canvas.width - agent.radius, agent.x))
-          agent.y = Math.max(agent.radius, Math.min(canvas.height - agent.radius, agent.y))
-        })
-        // Adjust number of agents to maintain density
-        const desiredCount = Math.round(density * canvas.width * canvas.height)
-        const diff = desiredCount - agentsRef.current.length
-        if (diff > 0) {
-          for (let i = 0; i < diff; i++) {
-            const typeIndex = Math.floor(Math.random() * config.agentTypes.length)
-            const type = config.agentTypes[typeIndex] as AgentType
-            agentsRef.current.push(new Agent(type))
-          }
-        } else if (diff < 0) {
-          for (let i = 0; i < Math.abs(diff); i++) {
-            agentsRef.current.pop()
-          }
-        }
-      }
+      // Calculate responsive connection distance
+      const logicalWidth = rect.width; // Use logical width for scaling reference
+      const baseDistance = config.connectionDistance;
+      const referenceWidth = 1920; // Example reference width
+      // Scale based on width, clamp between reasonable values (e.g., 80-300)
+      responsiveConnectionDistanceRef.current = Math.max(80, Math.min(300, baseDistance * (logicalWidth / referenceWidth)));
     };
 
-    resizeCanvas()
+    resizeCanvas() // Call initially to set distance
     window.addEventListener("resize", resizeCanvas)
 
     // --- Move classes back inside useEffect ---
@@ -151,16 +120,16 @@ export default function NetworkBackgroundAnimation({
           this.progress = 0; // Added back from original
         }
 
-        getColor() { // Reverted color logic
+        getColor() { // Updated colors for light theme -> Crimson Red theme
           switch (this.type) {
             case "request":
-              return "rgba(100, 255, 218, 0.9)"
+              return "rgba(220, 20, 60, 0.5)" // Crimson Red
             case "response":
-              return "rgba(118, 228, 247, 0.9)"
+              return "rgba(200, 20, 50, 0.5)" // Slightly darker Crimson Red
             case "broadcast":
-              return "rgba(255, 214, 118, 0.9)"
+              return "rgba(220, 20, 60, 0.5)" // Crimson Red
             default:
-              return "rgba(255, 255, 255, 0.8)"
+              return "rgba(220, 20, 60, 0.4)" // Default Crimson Red
           }
         }
 
@@ -292,13 +261,13 @@ export default function NetworkBackgroundAnimation({
       getColor() {
         switch (this.type) {
           case "primary":
-            return `rgba(100, 255, 218, ${0.7 + Math.random() * 0.3})`
+            return `rgba(220, 20, 60, ${0.4 + Math.random() * 0.2})` // Crimson Red
           case "secondary":
-            return `rgba(118, 228, 247, ${0.6 + Math.random() * 0.3})`
+            return `rgba(220, 20, 60, ${0.3 + Math.random() * 0.2})` // Crimson Red
           case "tertiary":
-            return `rgba(255, 255, 255, ${0.5 + Math.random() * 0.3})`
+            return `rgba(220, 20, 60, ${0.3 + Math.random() * 0.2})` // Crimson Red
           default:
-            return "rgba(255, 255, 255, 0.7)"
+            return "rgba(220, 20, 60, 0.3)" // Default Crimson Red
         }
       }
 
@@ -324,7 +293,7 @@ export default function NetworkBackgroundAnimation({
         // Update pulse effect
         if (this.isPulsing) {
           this.pulseRadius += 0.5
-          if (this.pulseRadius > config.connectionDistance) {
+          if (this.pulseRadius > responsiveConnectionDistanceRef.current) { // Use responsive distance
             this.isPulsing = false
             this.pulseRadius = 0
           }
@@ -383,7 +352,7 @@ export default function NetworkBackgroundAnimation({
           if (colorMatch) {
             ctx.fillStyle = `rgba(${colorMatch[1]}, ${colorMatch[2]}, ${colorMatch[3]}, 0.2)`
           } else {
-            ctx.fillStyle = "rgba(100, 255, 218, 0.2)"
+            ctx.fillStyle = "rgba(220, 20, 60, 0.2)"
           }
           ctx.fill()
         }
@@ -399,7 +368,7 @@ export default function NetworkBackgroundAnimation({
           if (colorMatch) {
             ctx.strokeStyle = `rgba(${colorMatch[1]}, ${colorMatch[2]}, ${colorMatch[3]}, 0.3)`
           } else {
-            ctx.strokeStyle = "rgba(100, 255, 218, 0.3)"
+            ctx.strokeStyle = "rgba(220, 20, 60, 0.3)"
           }
           ctx.lineWidth = 1
           ctx.stroke()
@@ -408,7 +377,7 @@ export default function NetworkBackgroundAnimation({
         // Draw connections
         this.connections.forEach((agent) => {
           const distance = Math.sqrt(Math.pow(this.x - agent.x, 2) + Math.pow(this.y - agent.y, 2))
-          if (distance < config.connectionDistance) {
+          if (distance < responsiveConnectionDistanceRef.current) { // Use responsive distance
             ctx.beginPath()
             ctx.moveTo(this.x, this.y)
             ctx.lineTo(agent.x, agent.y)
@@ -429,12 +398,12 @@ export default function NetworkBackgroundAnimation({
               gradient.addColorStop(1, targetRgba)
             } else {
               // Fallback if color parsing fails
-              gradient.addColorStop(0, "rgba(100, 255, 218, 0.2)")
-              gradient.addColorStop(1, "rgba(118, 228, 247, 0.2)")
+              gradient.addColorStop(0, "rgba(220, 20, 60, 0.2)")
+              gradient.addColorStop(1, "rgba(220, 20, 60, 0.2)")
             }
 
             ctx.strokeStyle = gradient
-            ctx.lineWidth = 0.5 * (1 - distance / config.connectionDistance)
+            ctx.lineWidth = 0.5 * (1 - distance / responsiveConnectionDistanceRef.current) // Use responsive distance
             ctx.stroke()
           }
         })
@@ -457,7 +426,7 @@ export default function NetworkBackgroundAnimation({
         agentsRef.current.forEach((otherAgent) => {
           if (otherAgent instanceof Agent && agent !== otherAgent) {
             const distance = Math.sqrt(Math.pow(agent.x - otherAgent.x, 2) + Math.pow(agent.y - otherAgent.y, 2));
-            if (distance < config.connectionDistance) {
+            if (distance < responsiveConnectionDistanceRef.current) { // Use responsive distance
               agent.connections.push(otherAgent);
             }
           }
@@ -480,8 +449,6 @@ export default function NetworkBackgroundAnimation({
       }
     }
 
-    // Set density after initial agent setup
-    density = config.numAgents / (canvas.width * canvas.height)
 
     // Animation loop
     let lastTime = 0 // Reverted lastTime initialization
@@ -538,7 +505,7 @@ export default function NetworkBackgroundAnimation({
           for (const otherAgent of allAgents) {
             if (agent !== otherAgent) {
               const distance = Math.sqrt(Math.pow(agent.x - otherAgent.x, 2) + Math.pow(agent.y - otherAgent.y, 2));
-              if (distance < config.connectionDistance) {
+              if (distance < responsiveConnectionDistanceRef.current) { // Use responsive distance
                 agent.connections.push(otherAgent);
               }
             }
@@ -567,8 +534,7 @@ export default function NetworkBackgroundAnimation({
       animationFrameIdRef.current = requestAnimationFrame(animate)
     }
 
-    // Start animation loop on next frame instead of immediate call
-    animationFrameIdRef.current = requestAnimationFrame(animate)
+    animate(0)
 
     return () => {
       if (animationFrameIdRef.current) {
@@ -576,8 +542,12 @@ export default function NetworkBackgroundAnimation({
       }
       window.removeEventListener("resize", resizeCanvas)
     }
-  }, [config]) // Add stable config back to dependency array
+  }, [])
 
-  if (!mounted) return null;
   return <canvas ref={canvasRef} className={className} />
 }
+
+// Use dynamic import with ssr:false to prevent hydration errors
+export default dynamic(() => Promise.resolve(NetworkBackgroundAnimation), {
+  ssr: false
+})
