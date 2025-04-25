@@ -122,7 +122,7 @@ function Hero() {
                 className="relative z-10 h-12 w-full"
               >
                 <span className="flex items-center gap-2 justify-center">
-                  Jump on a call <PhoneCall className="w-4 h-4" />
+                  Visit Docs
                 </span>
               </RainbowButton>
             </motion.div>

@@ -1,10 +1,77 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { RainbowButton } from "./RainbowButton";
 
+interface GitHubStats {
+  stars: number | null;
+  contributors: number | null;
+}
+
 export const OpenSourceSection = () => {
+  const [stats, setStats] = useState<GitHubStats>({ stars: null, contributors: null });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      setLoading(true);
+      setError(null);
+      const repoUrl = 'https://api.github.com/repos/Pebbling-ai/pebble';
+      const contributorsUrl = 'https://api.github.com/repos/Pebbling-ai/pebble/contributors';
+      
+      const headers: HeadersInit = {
+        Accept: 'application/vnd.github.v3+json',
+      };
+      if (process.env.NEXT_PUBLIC_GITHUB_PAT) { 
+        headers['Authorization'] = `token ${process.env.NEXT_PUBLIC_GITHUB_PAT}`;
+      }
+
+      try {
+        const [repoRes, contributorsRes] = await Promise.all([
+          fetch(repoUrl, { headers }),
+          fetch(contributorsUrl, { headers, next: { revalidate: 3600 } }) 
+        ]);
+
+        let starsData: number | null = null;
+        let contributorsData: number | null = null;
+        let fetchError = null;
+
+        if (repoRes.ok) {
+          const repoData = await repoRes.json();
+          starsData = repoData.stargazers_count ?? null;
+        } else {
+          fetchError = `Repo fetch failed: ${repoRes.statusText}`;
+          console.error("GitHub API Error (Repo):", repoRes.status, repoRes.statusText);
+        }
+
+        if (contributorsRes.ok) {
+          const contributorsList = await contributorsRes.json();
+          contributorsData = Array.isArray(contributorsList) ? contributorsList.length : null;
+        } else {
+          const contribError = `Contributors fetch failed: ${contributorsRes.statusText}`;
+          fetchError = fetchError ? `${fetchError}; ${contribError}` : contribError;
+          console.error("GitHub API Error (Contributors):", contributorsRes.status, contributorsRes.statusText);
+        }
+
+        if (fetchError) {
+            throw new Error(fetchError);
+        }
+
+        setStats({ stars: starsData, contributors: contributorsData });
+        
+      } catch (err: any) {
+        console.error("Failed to fetch GitHub stats:", err);
+        setError(err.message || 'Failed to load stats');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   return (
     <section className="w-full py-12 md:py-24 bg-background">
       <div className="container px-4 md:px-6 mx-auto max-w-5xl">
@@ -58,7 +125,9 @@ export const OpenSourceSection = () => {
                   </svg>
                 ))}
               </div>
-              <h3 className="text-2xl font-bold">6 Stars</h3>
+              <h3 className="text-2xl font-bold">
+                {loading ? 'Loading...' : stats.stars !== null ? `${stats.stars} Stars` : 'N/A Stars'}
+              </h3>
               <p className="text-muted-foreground">
                 And growing every day
               </p>
@@ -94,12 +163,17 @@ export const OpenSourceSection = () => {
                   </div>
                 ))}
               </div>
-              <h3 className="text-2xl font-bold">5+ Contributors</h3>
+              <h3 className="text-2xl font-bold">
+                {loading ? 'Loading...' : stats.contributors !== null ? `${stats.contributors}+ Contributors` : 'N/A Contributors'}
+              </h3>
               <p className="text-muted-foreground">
                 Join our growing community
               </p>
             </motion.div>
           </div>
+          {error && (
+            <p className="text-red-500 text-sm mt-4">Error: {error}</p>
+          )}
         </motion.div>
       </div>
     </section>
