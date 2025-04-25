@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { RainbowButton } from "./RainbowButton";
 import { SimpleParticles } from "./SimpleParticles";
 import { useUser } from "@clerk/nextjs";
-import { FloatingPaths } from "../components/ui/background-paths";
 import { useTheme } from "next-themes";
 import NewBackgroundAnimation from "./NewBackground";
 
@@ -53,11 +52,7 @@ function Hero() {
         <SimpleParticles className="absolute top-0 left-0 right-0 bottom-0 h-full w-full" />
         {mounted && (
           <>
-            <div className="absolute inset-0 dark:hidden text-red-700">
-              <FloatingPaths position={1} />
-              <FloatingPaths position={-1} />
-            </div>
-            {theme === 'dark' && <NewBackgroundAnimation className="absolute inset-0 w-full h-full" />}
+            <NewBackgroundAnimation className="absolute inset-0 w-full h-full" />
           </>
         )}
       </div>
