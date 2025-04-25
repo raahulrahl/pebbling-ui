@@ -7,11 +7,15 @@ import { RainbowButton } from "./RainbowButton";
 import { SimpleParticles } from "./SimpleParticles";
 import { useUser } from "@clerk/nextjs";
 import { FloatingPaths } from "../components/ui/background-paths";
+import { useTheme } from "next-themes";
+import NewBackgroundAnimation from "./NewBackground";
 
 function Hero() {
   const { isSignedIn } = useUser();
   const [titleNumber, setTitleNumber] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
+
   const titles = useMemo(
     () => ["framework agnostic", "extensive agents", "ease of use", "secure protocol"],
     []
@@ -45,6 +49,7 @@ function Hero() {
           <FloatingPaths position={1} />
           <FloatingPaths position={-1} />
         </div>
+        {theme === 'dark' && <NewBackgroundAnimation className="absolute inset-0 w-full h-full" />}
       </div>
       
       <div className="container mx-auto px-4 relative z-10 w-full">

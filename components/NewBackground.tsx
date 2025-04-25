@@ -1,141 +1,258 @@
-"use client"
+import React, { useRef, useEffect, useMemo, useState } from "react"
 
-import { useRef, useEffect } from "react"
+interface NetworkConfig {
+  numAgents: number
+  agentSpeed: number
+  messageSpeed: number
+  connectionDistance: number
+  messageFrequency: number
+  agentTypes: string[]
+}
+
+interface NetworkBackgroundAnimationProps {
+  config?: Partial<NetworkConfig>
+  className?: string
+}
+
+// Default configuration
+const defaultConfig: NetworkConfig = {
+  numAgents: 40,
+  agentSpeed: 0.4,
+  messageSpeed: 2,
+  connectionDistance: 180,
+  messageFrequency: 0.02,
+  agentTypes: ["primary", "secondary", "tertiary"],
+}
 
 export default function NetworkBackgroundAnimation({
-  config = {
-    numAgents: 40,
-    connectionDistance: 180,
-    agentTypes: ["primary", "secondary", "tertiary"],
-    messageFrequency: 0.02,
-    messageSpeed: 2,
-    agentSpeed: 0.4,
-  },
-  className = "absolute inset-0 w-full h-full z-0"
-}) {
-  const canvasRef = useRef(null)
+  config: userConfig = {},
+  className = "absolute inset-0 w-full h-full z-0",
+}: NetworkBackgroundAnimationProps) {
+  // Only render on client to avoid hydration error
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  // Stabilize config object with useMemo (static for empty userConfig)
+  const config = useMemo(() => {
+    if (!userConfig || Object.keys(userConfig).length === 0) {
+      return defaultConfig
+    }
+    return { ...defaultConfig, ...userConfig }
+  }, [JSON.stringify(userConfig)])
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  // Reverting type to 'any[]' as it was before the fixes
+  const agentsRef = useRef<any[]>([]) 
+  const animationFrameIdRef = useRef<number | null>(null)
+  const bgColorRef = useRef<string>('#0b0b14') // Default fallback
 
   useEffect(() => {
     if (!canvasRef.current) return
 
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+    const canvas = canvasRef.current as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    // Set canvas dimensions
-    const setCanvasDimensions = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+
+    // Dynamically get computed background color
+    try {
+      // Ensure canvas is in the DOM and styled before reading
+      const computedBg = window.getComputedStyle(canvas).getPropertyValue('--background').trim();
+      if (computedBg) {
+        bgColorRef.current = computedBg;
+      } else {
+        console.warn("Could not compute background color, using fallback.");
+      }
+    } catch (error) {
+       console.error("Error getting computed style:", error);
+       // Use fallback if error occurs
     }
 
-    setCanvasDimensions()
-    window.addEventListener("resize", setCanvasDimensions)
 
+    // Track agent density for responsive resizing
+    let density = 0;
+    // Set canvas dimensions and handle responsive agent adjustments
+    let dpr = 1;
+    const resizeCanvas = () => {
+      dpr = window.devicePixelRatio || 1 // Update dpr on resize
+      const rect = canvas.getBoundingClientRect()
+      const newWidth = Math.max(1, rect.width * dpr);
+      const newHeight = Math.max(1, rect.height * dpr);
+
+      if (canvas.width !== newWidth || canvas.height !== newHeight) {
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+        console.log(`Canvas resized to: ${canvas.width}x${canvas.height}`);
+      } else {
+         console.log("Resize detected but dimensions haven't changed.")
+      }
+
+      // After initial setup, adjust agents count and clamp positions
+      if (density > 0) {
+        // Keep agents within new bounds
+        agentsRef.current.forEach((agent: any) => {
+          agent.x = Math.max(agent.radius, Math.min(canvas.width - agent.radius, agent.x))
+          agent.y = Math.max(agent.radius, Math.min(canvas.height - agent.radius, agent.y))
+        })
+        // Adjust number of agents to maintain density
+        const desiredCount = Math.round(density * canvas.width * canvas.height)
+        const diff = desiredCount - agentsRef.current.length
+        if (diff > 0) {
+          for (let i = 0; i < diff; i++) {
+            const typeIndex = Math.floor(Math.random() * config.agentTypes.length)
+            const type = config.agentTypes[typeIndex] as AgentType
+            agentsRef.current.push(new Agent(type))
+          }
+        } else if (diff < 0) {
+          for (let i = 0; i < Math.abs(diff); i++) {
+            agentsRef.current.pop()
+          }
+        }
+      }
+    };
+
+    resizeCanvas()
+    window.addEventListener("resize", resizeCanvas)
+
+    // --- Move classes back inside useEffect ---
     // Create agents representing AI entities
-    const agents = []
+    type AgentType = "primary" | "secondary" | "tertiary";
+    agentsRef.current = [];
 
     class Message {
-      constructor(source, target, type) {
-        this.source = source
-        this.target = target
-        this.progress = 0
-        this.speed = config.messageSpeed * (0.8 + Math.random() * 0.4)
-        this.size = 2 + Math.random() * 2
-        this.type = type || "data"
-        this.color = this.getColor()
-        this.completed = false
-        this.pathPoints = this.generatePath()
-        this.currentPoint = 0
-        this.x = source.x
-        this.y = source.y
-      }
+        source: Agent;
+        target: Agent;
+        // type: "request" | "response" | "broadcast"; // Reverted type
+        type: string;
+        x: number;
+        y: number;
+        speed: number;
+        pathPoints: { x: number; y: number }[];
+        currentPoint: number;
+        completed: boolean;
+        color: string;
+        // pulseRadius: number; // Removed
+        // pulseSpeed: number; // Removed
+        size: number; // Added back
+        progress: number; // Added back from original
 
-      getColor() {
-        switch (this.type) {
-          case "request":
-            return "rgba(100, 255, 218, 0.9)"
-          case "response":
-            return "rgba(118, 228, 247, 0.9)"
-          case "broadcast":
-            return "rgba(255, 214, 118, 0.9)"
-          default:
-            return "rgba(255, 255, 255, 0.8)"
-        }
-      }
-
-      generatePath() {
-        // Create a slightly curved path between source and target
-        const points = []
-        const numPoints = 20
-        const controlPoint = {
-          x: (this.source.x + this.target.x) / 2 + (Math.random() - 0.5) * 80,
-          y: (this.source.y + this.target.y) / 2 + (Math.random() - 0.5) * 80,
+        constructor(source: Agent, target: Agent, type: string) {
+          this.source = source;
+          this.target = target;
+          this.type = type || "data"; // Reverted default type
+          this.speed = config.messageSpeed * (0.8 + Math.random() * 0.4); // Reverted speed calc
+          this.x = source.x;
+          this.y = source.y;
+          this.completed = false;
+          // this.pulseRadius = 0; // Removed
+          // this.pulseSpeed = 0.2; // Removed
+          this.size = 2 + Math.random() * 2; // Added back size
+          this.pathPoints = this.generatePath(); // Reverted to generatePath
+          this.currentPoint = 0;
+          this.color = this.getColor(); // Reverted color logic
+          this.progress = 0; // Added back from original
         }
 
-        for (let i = 0; i <= numPoints; i++) {
-          const t = i / numPoints
-          const x =
-            Math.pow(1 - t, 2) * this.source.x + 2 * (1 - t) * t * controlPoint.x + Math.pow(t, 2) * this.target.x
-          const y =
-            Math.pow(1 - t, 2) * this.source.y + 2 * (1 - t) * t * controlPoint.y + Math.pow(t, 2) * this.target.y
-          points.push({ x, y })
-        }
-        return points
-      }
-
-      update() {
-        this.currentPoint += this.speed
-
-        if (this.currentPoint >= this.pathPoints.length - 1) {
-          this.completed = true
-          // Create a response message with 70% probability
-          if (this.type === "request" && Math.random() < 0.7) {
-            agents.push(new Message(this.target, this.source, "response"))
-          }
-          return
-        }
-
-        const pointIndex = Math.floor(this.currentPoint)
-        const nextPointIndex = Math.min(pointIndex + 1, this.pathPoints.length - 1)
-        const fraction = this.currentPoint - pointIndex
-
-        this.x =
-          this.pathPoints[pointIndex].x + (this.pathPoints[nextPointIndex].x - this.pathPoints[pointIndex].x) * fraction
-        this.y =
-          this.pathPoints[pointIndex].y + (this.pathPoints[nextPointIndex].y - this.pathPoints[pointIndex].y) * fraction
-      }
-
-      draw() {
-        if (!ctx) return
-
-        // Draw message
-        ctx.beginPath()
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
-        ctx.fillStyle = this.color
-        ctx.fill()
-
-        // Draw trail
-        const trailLength = 5
-        for (let i = 1; i <= trailLength; i++) {
-          const trailPointIndex = Math.max(0, Math.floor(this.currentPoint) - i)
-          if (trailPointIndex >= 0 && trailPointIndex < this.pathPoints.length) {
-            ctx.beginPath()
-            ctx.arc(
-              this.pathPoints[trailPointIndex].x,
-              this.pathPoints[trailPointIndex].y,
-              this.size * (1 - i / trailLength),
-              0,
-              Math.PI * 2,
-            )
-            ctx.fillStyle = this.color.replace(")", `, ${0.7 * (1 - i / trailLength)})`)
-            ctx.fill()
+        getColor() { // Reverted color logic
+          switch (this.type) {
+            case "request":
+              return "rgba(100, 255, 218, 0.9)"
+            case "response":
+              return "rgba(118, 228, 247, 0.9)"
+            case "broadcast":
+              return "rgba(255, 214, 118, 0.9)"
+            default:
+              return "rgba(255, 255, 255, 0.8)"
           }
         }
-      }
+
+        generatePath() { // Reverted path generation
+          // Create a slightly curved path between source and target
+          const points = []
+          const numPoints = 20
+          const controlPoint = {
+            x: (this.source.x + this.target.x) / 2 + (Math.random() - 0.5) * 80,
+            y: (this.source.y + this.target.y) / 2 + (Math.random() - 0.5) * 80,
+          }
+
+          for (let i = 0; i <= numPoints; i++) {
+            const t = i / numPoints
+            const x =
+              Math.pow(1 - t, 2) * this.source.x + 2 * (1 - t) * t * controlPoint.x + Math.pow(t, 2) * this.target.x
+            const y =
+              Math.pow(1 - t, 2) * this.source.y + 2 * (1 - t) * t * controlPoint.y + Math.pow(t, 2) * this.target.y
+            points.push({ x, y })
+          }
+          return points
+        }
+
+        update() { // Reverted - removed addAgentOrMessage param
+          this.currentPoint += this.speed
+
+          if (this.currentPoint >= this.pathPoints.length - 1) {
+            this.completed = true
+            // Create a response message with 70% probability
+            if (this.type === "request" && Math.random() < 0.7) {
+              agentsRef.current.push(new Message(this.target, this.source, "response")) // Reverted direct access
+            }
+            return
+          }
+
+          const pointIndex = Math.floor(this.currentPoint)
+          const nextPointIndex = Math.min(pointIndex + 1, this.pathPoints.length - 1)
+          const fraction = this.currentPoint - pointIndex
+
+          this.x =
+            this.pathPoints[pointIndex].x + (this.pathPoints[nextPointIndex].x - this.pathPoints[pointIndex].x) * fraction
+          this.y =
+            this.pathPoints[pointIndex].y + (this.pathPoints[nextPointIndex].y - this.pathPoints[pointIndex].y) * fraction
+        }
+
+        draw() { // Reverted draw method
+          if (!ctx) return
+
+          // Draw message
+          ctx.beginPath()
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+          ctx.fillStyle = this.color
+          ctx.fill()
+
+          // Draw trail
+          const trailLength = 5
+          for (let i = 1; i <= trailLength; i++) {
+            const trailPointIndex = Math.max(0, Math.floor(this.currentPoint) - i)
+            if (trailPointIndex >= 0 && trailPointIndex < this.pathPoints.length) {
+              ctx.beginPath()
+              ctx.arc(
+                this.pathPoints[trailPointIndex].x,
+                this.pathPoints[trailPointIndex].y,
+                this.size * (1 - i / trailLength),
+                0,
+                Math.PI * 2,
+              )
+              // Carefully check string formatting here
+              ctx.fillStyle = this.color.replace(")", `, ${0.7 * (1 - i / trailLength)})`)
+              ctx.fill()
+            }
+          }
+        }
     }
 
-    class Agent {
-      constructor(type = "primary") {
+    class Agent { // Reverted Agent class
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      type: AgentType;
+      radius: number;
+      color: string;
+      pulseRadius: number;
+      isPulsing: boolean;
+      connections: Agent[];
+      lastMessageTime: number;
+      messageThreshold: number;
+      id: string;
+      processingPower: number;
+      dataPoints: { angle: number; height: number }[];
+      constructor(type: AgentType = "primary") {
         this.x = Math.random() * canvas.width
         this.y = Math.random() * canvas.height
         this.vx = (Math.random() - 0.5) * config.agentSpeed
@@ -185,7 +302,7 @@ export default function NetworkBackgroundAnimation({
         }
       }
 
-      update(currentTime) {
+      update(currentTime: number) { // Reverted - removed addAgentOrMessage and canvas size params
         // Update position with boundary checking
         this.x += this.vx
         this.y += this.vy
@@ -223,7 +340,7 @@ export default function NetworkBackgroundAnimation({
             // Find a random connection to send a message to
             if (this.connections.length > 0) {
               const targetAgent = this.connections[Math.floor(Math.random() * this.connections.length)]
-              agents.push(new Message(this, targetAgent, "request"))
+              agentsRef.current.push(new Message(this, targetAgent, "request")) // Reverted direct access
             }
           }
         }
@@ -234,7 +351,7 @@ export default function NetworkBackgroundAnimation({
         })
       }
 
-      draw() {
+      draw() { // Reverted draw method
         if (!ctx) return
 
         // Draw agent
@@ -261,6 +378,7 @@ export default function NetworkBackgroundAnimation({
           ctx.closePath()
 
           // Extract the base color and create new rgba with modified alpha
+          // Carefully check string formatting here
           const colorMatch = this.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/)
           if (colorMatch) {
             ctx.fillStyle = `rgba(${colorMatch[1]}, ${colorMatch[2]}, ${colorMatch[3]}, 0.2)`
@@ -276,6 +394,7 @@ export default function NetworkBackgroundAnimation({
           ctx.arc(this.x, this.y, this.pulseRadius, 0, Math.PI * 2)
 
           // Extract the base color and create new rgba with modified alpha
+          // Carefully check string formatting here
           const colorMatch = this.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/)
           if (colorMatch) {
             ctx.strokeStyle = `rgba(${colorMatch[1]}, ${colorMatch[2]}, ${colorMatch[3]}, 0.3)`
@@ -298,6 +417,7 @@ export default function NetworkBackgroundAnimation({
             const gradient = ctx.createLinearGradient(this.x, this.y, agent.x, agent.y)
 
             // Extract the base color and create new rgba with modified alpha
+            // Carefully check string formatting here
             const sourceColorMatch = this.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/)
             const targetColorMatch = agent.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/)
 
@@ -320,56 +440,67 @@ export default function NetworkBackgroundAnimation({
         })
       }
     }
+    // --- End Class Definitions ---
 
     // Initialize agents
     for (let i = 0; i < config.numAgents; i++) {
       const typeIndex = Math.floor(Math.random() * config.agentTypes.length)
-      agents.push(new Agent(config.agentTypes[typeIndex]))
+      // Ensure type is valid AgentType
+      const type = config.agentTypes[typeIndex] as AgentType;
+      agentsRef.current.push(new Agent(type));
     }
 
     // Create connections between agents
-    agents.forEach((agent) => {
-      agents.forEach((otherAgent) => {
-        if (agent !== otherAgent) {
-          const distance = Math.sqrt(Math.pow(agent.x - otherAgent.x, 2) + Math.pow(agent.y - otherAgent.y, 2))
-          if (distance < config.connectionDistance) {
-            agent.connections.push(otherAgent)
+    agentsRef.current.forEach((agent) => {
+      if (agent instanceof Agent) {
+        agent.connections = [];
+        agentsRef.current.forEach((otherAgent) => {
+          if (otherAgent instanceof Agent && agent !== otherAgent) {
+            const distance = Math.sqrt(Math.pow(agent.x - otherAgent.x, 2) + Math.pow(agent.y - otherAgent.y, 2));
+            if (distance < config.connectionDistance) {
+              agent.connections.push(otherAgent);
+            }
           }
-        }
-      })
-    })
+        });
+      }
+    });
 
     // Create some initial messages
     for (let i = 0; i < 5; i++) {
-      const sourceIndex = Math.floor(Math.random() * agents.length)
-      const source = agents[sourceIndex]
+      // Only use Agent instances as source
+      const agentSources = agentsRef.current.filter(a => a instanceof Agent);
+      if (agentSources.length === 0) continue; // Skip if no agents
+      const sourceIndex = Math.floor(Math.random() * agentSources.length);
+      const source = agentSources[sourceIndex];
 
       if (source.connections.length > 0) {
-        const targetIndex = Math.floor(Math.random() * source.connections.length)
-        const target = source.connections[targetIndex]
-        agents.push(new Message(source, target, "request"))
+        const targetIndex = Math.floor(Math.random() * source.connections.length);
+        const target = source.connections[targetIndex];
+        agentsRef.current.push(new Message(source, target, "request"));
       }
     }
 
+    // Set density after initial agent setup
+    density = config.numAgents / (canvas.width * canvas.height)
+
     // Animation loop
-    let lastTime = 0
-    const animate = (currentTime) => {
-      const deltaTime = currentTime - lastTime
+    let lastTime = 0 // Reverted lastTime initialization
+    const animate = (currentTime: number) => {
+      const deltaTime = currentTime - lastTime // Reverted deltaTime calculation
       lastTime = currentTime
 
+      // Reverted - removed deltaTime check and canvas/ctx check
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Draw background gradient
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-      gradient.addColorStop(0, "#0F172A")
-      gradient.addColorStop(1, "#1E293B")
-      ctx.fillStyle = gradient
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      // Use the computed background color from the ref
+      ctx.fillStyle = bgColorRef.current;
+      // Adjust fillRect for DPR scaling to cover the logical canvas size
+      ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr); 
 
-      // Add some noise/stars to the background
+      // Add some noise/stars to the background (adjust random position range for DPR)
       for (let i = 0; i < 50; i++) {
-        const x = Math.random() * canvas.width
-        const y = Math.random() * canvas.height
+        const x = Math.random() * canvas.width / dpr
+        const y = Math.random() * canvas.height / dpr
         const radius = Math.random() * 1
         ctx.beginPath()
         ctx.arc(x, y, radius, 0, Math.PI * 2)
@@ -378,67 +509,75 @@ export default function NetworkBackgroundAnimation({
       }
 
       // Update and draw agents
-      agents.forEach((agent) => {
+      agentsRef.current.forEach((agent) => {
         if (agent instanceof Agent) {
-          agent.update(currentTime)
+          agent.update(currentTime) // Reverted - removed params
           agent.draw()
         }
       })
 
       // Update and draw messages
-      for (let i = agents.length - 1; i >= 0; i--) {
-        if (agents[i] instanceof Message) {
-          agents[i].update()
-          agents[i].draw()
+      for (let i = agentsRef.current.length - 1; i >= 0; i--) {
+        const item = agentsRef.current[i];
+        if (item instanceof Message) {
+          item.update() // Reverted - removed params
+          item.draw()
 
-          if (agents[i].completed) {
-            agents.splice(i, 1)
+          // Type narrowing already done, just check 'completed'
+          if (item.completed) {
+            agentsRef.current.splice(i, 1)
           }
         }
       }
 
-      // Occasionally create new connections as agents move
+      // Occasionally create new connections as agents move (Restored)
       if (Math.random() < 0.01) {
-        agents.forEach((agent) => {
-          if (agent instanceof Agent) {
-            agent.connections = []
-            agents.forEach((otherAgent) => {
-              if (otherAgent instanceof Agent && agent !== otherAgent) {
-                const distance = Math.sqrt(Math.pow(agent.x - otherAgent.x, 2) + Math.pow(agent.y - otherAgent.y, 2))
-                if (distance < config.connectionDistance) {
-                  agent.connections.push(otherAgent)
-                }
+        const allAgents = agentsRef.current.filter(a => a instanceof Agent) as Agent[]; // Filter once
+        for (const agent of allAgents) {
+          agent.connections = []; // Reset connections
+          for (const otherAgent of allAgents) {
+            if (agent !== otherAgent) {
+              const distance = Math.sqrt(Math.pow(agent.x - otherAgent.x, 2) + Math.pow(agent.y - otherAgent.y, 2));
+              if (distance < config.connectionDistance) {
+                agent.connections.push(otherAgent);
               }
-            })
+            }
           }
-        })
+        }
       }
 
       // Occasionally broadcast message from a random primary agent
       if (Math.random() < 0.002) {
-        const primaryAgents = agents.filter((agent) => agent instanceof Agent && agent.type === "primary")
+        const primaryAgents = agentsRef.current.filter((agent) => agent instanceof Agent && agent.type === "primary") as Agent[];
         if (primaryAgents.length > 0) {
-          const broadcaster = primaryAgents[Math.floor(Math.random() * primaryAgents.length)]
-          broadcaster.isPulsing = true
+          const broadcaster: Agent = primaryAgents[Math.floor(Math.random() * primaryAgents.length)];
+          broadcaster.isPulsing = true; // Reverted pulsing logic
+          // broadcaster.pulseRadius = 0; // Removed pulse reset
 
           // Create broadcast messages to all connected agents
-          broadcaster.connections.forEach((target) => {
+          broadcaster.connections.forEach((target: Agent) => {
             if (target instanceof Agent) {
-              agents.push(new Message(broadcaster, target, "broadcast"))
+              agentsRef.current.push(new Message(broadcaster, target, "broadcast"));
             }
-          })
+          });
         }
       }
 
-      requestAnimationFrame(animate)
+      // Reverted animation frame request position
+      animationFrameIdRef.current = requestAnimationFrame(animate)
     }
 
-    animate(0)
+    // Start animation loop on next frame instead of immediate call
+    animationFrameIdRef.current = requestAnimationFrame(animate)
 
     return () => {
-      window.removeEventListener("resize", setCanvasDimensions)
+      if (animationFrameIdRef.current) {
+        cancelAnimationFrame(animationFrameIdRef.current)
+      }
+      window.removeEventListener("resize", resizeCanvas)
     }
-  }, [config])
+  }, [config]) // Add stable config back to dependency array
 
+  if (!mounted) return null;
   return <canvas ref={canvasRef} className={className} />
 }

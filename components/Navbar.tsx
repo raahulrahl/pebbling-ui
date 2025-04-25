@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { RainbowButton } from './RainbowButton'
 import { SignInButton, UserButton, useUser } from '@clerk/nextjs'
-import { ModeToggle } from './mode-toggle';
 
 // A custom component to fetch and display GitHub stars
 const GitHubStars = () => {
@@ -108,14 +107,10 @@ const Navbar = () => {
           >
             HIBISCUS
           </Link>
-          <div className="pt-2 flex justify-center">
-            <ModeToggle />
-          </div>
         </nav>
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex items-center space-x-4">
-          <ModeToggle />
           <Link href="#">
             <RainbowButton>
               DOCS
@@ -197,9 +192,6 @@ const Navbar = () => {
           >
             BLOG
           </Link>
-          <div className="pt-2 flex justify-center">
-            <ModeToggle />
-          </div>
           <Link href="#" className="w-full">
             <RainbowButton className="w-full">
               DOCS
