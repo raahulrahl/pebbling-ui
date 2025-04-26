@@ -54,13 +54,13 @@ export const NewsletterSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="flex items-center space-x-2 text-red-400">
+          <div className="flex items-center space-x-2 text-purple-400">
             <Mail className="h-5 w-5" />
             <span className="font-medium">Newsletter</span>
           </div>
           
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-            <span className="bg-gradient-to-br from-red-700 via-red-600 to-red-500 bg-clip-text text-transparent inline-block font-extrabold">Stay in the loop</span>
+            <span className="bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 bg-clip-text text-transparent inline-block font-extrabold">Stay in the loop</span>
           </h2>
           <p className="max-w-[600px] text-muted-foreground md:text-xl">
             Subscribe to our newsletter to get the latest updates on Pebbling AI and agent-to-agent communication.
@@ -74,7 +74,7 @@ export const NewsletterSection = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex h-11 w-full rounded-md border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-11 w-full rounded-md border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 disabled:cursor-not-allowed disabled:opacity-50"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={status === "loading"}

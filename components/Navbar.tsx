@@ -91,21 +91,21 @@ const Navbar = () => {
           <GitHubStars />
           <Link
             href="#"
-            className="relative group text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
+            className="relative group text-sm font-medium text-white hover:text-white/80 transition-colors duration-200"
           >
             COMMUNITY
             <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left"></span>
           </Link>
           <Link
             href="#"
-            className="relative group text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
+            className="relative group text-sm font-medium text-white hover:text-white/80 transition-colors duration-200"
           >
             BLOG
             <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left"></span>
           </Link>
           <Link
             href="#"
-            className="relative group text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
+            className="relative group text-sm font-medium text-white hover:text-white/80 transition-colors duration-200"
           >
             HIBISCUS
             <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left"></span>
@@ -185,14 +185,14 @@ const Navbar = () => {
           </div>
           <Link
             href="#"
-            className="relative group text-sm font-medium text-muted-foreground hover:text-foreground py-2 text-center transition-colors duration-200"
+            className="relative group text-sm font-medium text-white hover:text-white/80 py-2 text-center transition-colors duration-200"
           >
             COMMUNITY
             <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center"></span>
           </Link>
           <Link
             href="#"
-            className="relative group text-sm font-medium text-muted-foreground hover:text-foreground py-2 text-center transition-colors duration-200"
+            className="relative group text-sm font-medium text-white hover:text-white/80 py-2 text-center transition-colors duration-200"
           >
             BLOG
             <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center"></span>

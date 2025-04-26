@@ -57,7 +57,7 @@ export function StickyNewsletter() {
         >
           <div className="container mx-auto max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-2">
             <div className="flex items-center space-x-2 text-foreground">
-              <Mail className="h-4 w-4 text-red-400" />
+              <Mail className="h-4 w-4 text-purple-400" />
               <h3 className="text-xs sm:text-sm font-medium">Join our newsletter</h3>
             </div>
             
@@ -67,13 +67,13 @@ export function StickyNewsletter() {
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 h-8 px-3 py-1 text-xs bg-background text-foreground placeholder:text-muted-foreground rounded-md border border-border focus:outline-none focus:ring-1 focus:ring-red-400 focus:border-transparent"
+                className="flex-1 h-8 px-3 py-1 text-xs bg-background text-foreground placeholder:text-muted-foreground rounded-md border border-border focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent"
               />
               <Button 
                 type="submit"
                 size="sm"
                 disabled={status === "loading"}
-                className="h-8 bg-red-600 hover:bg-red-700 text-xs px-3 py-1"
+                className="h-8 bg-purple-600 hover:bg-purple-700 text-white text-xs px-3 py-1"
               >
                 {status === "loading" ? "..." : "Subscribe"}
               </Button>

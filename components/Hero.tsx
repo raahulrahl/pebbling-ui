@@ -70,7 +70,7 @@ function Hero() {
           </div>
           <div className="flex gap-4 flex-col w-full">
             <h1 className="text-4xl sm:text-5xl md:text-7xl tracking-tighter text-center font-regular px-2">
-              <span className="bg-gradient-to-r from-red-700 via-red-500 to-orange-400 bg-clip-text text-transparent font-bold">Agentify Yourself</span>
+              <span className="bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 bg-clip-text text-transparent font-bold">Agentify Yourself</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
                 &nbsp;
                 {titles.map((title, index) => (
@@ -108,11 +108,11 @@ function Hero() {
             >
               <div className="relative w-full h-full">
                 {/* Subtle animated gradient border */}
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-red-700 via-red-500 to-orange-400 dark:from-red-700 dark:via-red-600 dark:to-red-500 rounded-lg blur opacity-50 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 dark:from-purple-500 dark:via-purple-400 dark:to-indigo-500 rounded-lg blur opacity-50 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
 
                 {/* Animated pulse effect */}
                 <div
-                  className="absolute inset-0 bg-red-500/50 rounded-lg blur-lg animate-pulse hidden sm:block"
+                  className="absolute inset-0 bg-purple-500/50 rounded-lg blur-lg animate-pulse hidden sm:block"
                   style={{
                     animationDuration: '3s', // Slower pulse
                   }}

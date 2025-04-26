@@ -41,7 +41,7 @@ export const CTAContent = () => {
             variants={itemVariants} // Animate text block as one item
           >
             <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl text-center ">
-              <span className="bg-gradient-to-r from-red-700 via-red-500 to-orange-400 dark:bg-gradient-to-br dark:from-red-700 dark:via-red-600 dark:to-red-500 bg-clip-text text-transparent inline-block font-extrabold">
+              <span className="bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 dark:bg-gradient-to-br dark:from-purple-500 dark:via-purple-400 dark:to-indigo-500 bg-clip-text text-transparent inline-block font-extrabold">
                 Built to scale
               </span>
             </h2>
@@ -53,21 +53,21 @@ export const CTAContent = () => {
               <div>
                 <dt className="text-sm text-muted-foreground">AGENTS</dt>
                 <dd className="mt-1">
-                  <span className="text-red-400 font-bold text-2xl">15 millions+</span>
+                  <span className="text-purple-400 font-bold text-2xl">15 millions+</span>
                 </dd>
               </div>
 
               <div>
                 <dt className="text-sm text-muted-foreground">WEBSITE</dt>
                 <dd className="mt-1">
-                  <span className="text-red-400 font-bold text-2xl">10+</span>
+                  <span className="text-purple-400 font-bold text-2xl">10+</span>
                 </dd>
               </div>
 
               <div>
                 <dt className="text-sm text-muted-foreground">Communication pings(Build)</dt>
                 <dd className="mt-1">
-                  <span className="text-red-400 font-bold text-2xl">Will Live Soon</span>
+                  <span className="text-purple-400 font-bold text-2xl">Will Live Soon</span>
                 </dd>
               </div>
             </dl>

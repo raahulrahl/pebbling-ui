@@ -120,16 +120,16 @@ function NetworkBackgroundAnimation({
           this.progress = 0; // Added back from original
         }
 
-        getColor() { // Updated colors for light theme -> Crimson Red theme
+        getColor() { // Updated colors for light theme -> Purple theme
           switch (this.type) {
             case "request":
-              return "rgba(220, 20, 60, 0.5)" // Crimson Red
+              return "rgba(147, 51, 234, 0.5)" // Purple-600
             case "response":
-              return "rgba(200, 20, 50, 0.5)" // Slightly darker Crimson Red
+              return "rgba(126, 34, 206, 0.5)" // Purple-700
             case "broadcast":
-              return "rgba(220, 20, 60, 0.5)" // Crimson Red
+              return "rgba(168, 85, 247, 0.5)" // Purple-500
             default:
-              return "rgba(220, 20, 60, 0.4)" // Default Crimson Red
+              return "rgba(139, 92, 246, 0.4)" // Violet-500
           }
         }
 
@@ -261,13 +261,13 @@ function NetworkBackgroundAnimation({
       getColor() {
         switch (this.type) {
           case "primary":
-            return `rgba(220, 20, 60, ${0.4 + Math.random() * 0.2})` // Crimson Red
+            return `rgba(147, 51, 234, ${0.4 + Math.random() * 0.2})` // Purple-600
           case "secondary":
-            return `rgba(220, 20, 60, ${0.3 + Math.random() * 0.2})` // Crimson Red
+            return `rgba(168, 85, 247, ${0.3 + Math.random() * 0.2})` // Purple-500
           case "tertiary":
-            return `rgba(220, 20, 60, ${0.3 + Math.random() * 0.2})` // Crimson Red
+            return `rgba(168, 85, 247, ${0.3 + Math.random() * 0.2})` // Purple-500
           default:
-            return "rgba(220, 20, 60, 0.3)" // Default Crimson Red
+            return "rgba(139, 92, 246, 0.3)" // Default Violet-500
         }
       }
 
@@ -352,7 +352,7 @@ function NetworkBackgroundAnimation({
           if (colorMatch) {
             ctx.fillStyle = `rgba(${colorMatch[1]}, ${colorMatch[2]}, ${colorMatch[3]}, 0.2)`
           } else {
-            ctx.fillStyle = "rgba(220, 20, 60, 0.2)"
+            ctx.fillStyle = "rgba(147, 51, 234, 0.2)" // Purple-600
           }
           ctx.fill()
         }
@@ -368,7 +368,7 @@ function NetworkBackgroundAnimation({
           if (colorMatch) {
             ctx.strokeStyle = `rgba(${colorMatch[1]}, ${colorMatch[2]}, ${colorMatch[3]}, 0.3)`
           } else {
-            ctx.strokeStyle = "rgba(220, 20, 60, 0.3)"
+            ctx.strokeStyle = "rgba(147, 51, 234, 0.3)" // Purple-600
           }
           ctx.lineWidth = 1
           ctx.stroke()
@@ -398,8 +398,8 @@ function NetworkBackgroundAnimation({
               gradient.addColorStop(1, targetRgba)
             } else {
               // Fallback if color parsing fails
-              gradient.addColorStop(0, "rgba(220, 20, 60, 0.2)")
-              gradient.addColorStop(1, "rgba(220, 20, 60, 0.2)")
+              gradient.addColorStop(0, "rgba(147, 51, 234, 0.2)")
+              gradient.addColorStop(1, "rgba(139, 92, 246, 0.2)")
             }
 
             ctx.strokeStyle = gradient
