@@ -462,7 +462,7 @@ function NetworkBackgroundAnimation({
       // Use the computed background color from the ref
       ctx.fillStyle = bgColorRef.current;
       // Adjust fillRect for DPR scaling to cover the logical canvas size
-      ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr); 
+      ctx.fillRect(0, 0, canvas.width, canvas.height); 
 
       // Add some noise/stars to the background (adjust random position range for DPR)
       for (let i = 0; i < 50; i++) {

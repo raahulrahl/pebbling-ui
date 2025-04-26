@@ -14,7 +14,7 @@ interface FeatureCardProps {
 const FeatureCard = ({ title, description, icon: Icon }: FeatureCardProps) => {
   return (
     <motion.div
-      className="bg-white p-5 rounded-sm border border-gray-100 hover:shadow-sm transition-shadow duration-300 h-full flex flex-col"
+      className="bg-card p-5 rounded-sm border hover:shadow-sm transition-shadow duration-300 h-full flex flex-col"
       variants={itemVariants} // Apply item animation variants
       whileHover={{ y: -4, boxShadow: "0 4px 12px rgba(0,0,0,0.08)" }} // Apply hover animation
     >
@@ -100,7 +100,7 @@ const FeatureSection = () => {
   ];
 
   return (
-    <section className="w-full py-16 md:py-24 bg-white"> {/* Changed to white background */}
+    <section className="w-full py-16 md:py-24 bg-background"> {/* Use bg-background */} 
       <div className="container px-4 md:px-6 mx-auto max-w-6xl">
         {/* Section Header - Kept the gradient title */}
         <motion.div 
