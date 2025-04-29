@@ -72,7 +72,7 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between px-4">
-        <Link href="/" className="flex items-center space-x-2 group">
+        <Link href="/" className="flex items-center space-x-2 group ml-4">
           <div className="h-10 w-10 md:h-12 md:w-12 flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
             <Image
               src="/logo2.svg"
