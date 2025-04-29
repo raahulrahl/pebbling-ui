@@ -73,17 +73,16 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex items-center justify-between px-4">
         <Link href="/" className="flex items-center space-x-2 group">
-          <div className="h-10 w-10 md:h-12 md:w-12 flex items-center justify-center overflow-hidden rounded-md transition-transform group-hover:scale-105">
+          <div className="h-10 w-10 md:h-12 md:w-12 flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
             <Image
-              src="/pebbling-penguin.jpeg"
-              alt="Pebbling Penguin Logo"
+              src="/logo2.svg"
+              alt="Pebbling AI Logo"
               width={48}
               height={48}
-              className="rounded-md object-cover"
+              className="object-contain"
               priority
             />
           </div>
-          <span className="text-lg md:text-xl font-bold text-foreground whitespace-nowrap">Pebbling AI</span>
         </Link>
 
         {/* Desktop Navigation */}
