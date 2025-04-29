@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   title: "Pebbling AI",
   description: "The Esperanto for agent-to-agent communication",
   icons: {
-    icon: "/Pebbling.jpg",
-    apple: "/Pebbling.jpg",
+    icon: "/favicon (1).ico",
+    apple: "/favicon (1).ico",
   },
 };
 
